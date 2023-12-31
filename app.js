@@ -94,60 +94,56 @@ function regexFilter() {
     console.log(match);
 }
 
-
-
-
-//TODO make it so the first 2 turns are fixed words and the program works after that with the other logic
 function nextWord() {
     let turn = turnCounter();
+    if (checkWin()) {
+        confirm("We Have A Winner! Would you like to play again?");
+        location.reload();
+    } else {
 
-    if(turn < 3){
-        currentWord = "DOING";
-        console.log("turn under 2")
-        bisqueClick();
-        greenClick();
-        yellowClick();
-
-        updateRegex();
-        populateCurrentGuess();
-        makeGuessList();
+        if (turn < 3) {
+            currentWord = "DOING";
+            console.log("turn under 2")
+            bisqueClick();
+            greenClick();
+            yellowClick();
+            updateRegex();
+            populateCurrentGuess();
+            makeGuessList();
+            clearGreen();
+        }
+        else {
+            bisqueClick();
+            greenClick();
+            yellowClick();
+            updateRegex();
+            filterNextGuess();
+            setNextGuess();
+            populateCurrentGuess();
+            makeGuessList();
+        }
     }
-    else{
-        bisqueClick();
-        greenClick();
-        yellowClick();
 
-        updateRegex();
 
-        filterNextGuess();
-    
-        setNextGuess();
-    
-        populateCurrentGuess();
-    
-        makeGuessList();
-    }
-
-    
 };
 
-function updateRegex(){
+function updateRegex() {
     regex = new RegExp(`^[${firstLetter}][${secondLetter}][${thirdLetter}][${fourthLetter}][${fifthLetter}]$`);
     console.log("regex is: " + regex);
 }
 
-function filterNextGuess(){
+function filterNextGuess() {
     nextGuessArray = dictionary.filter((word) => regex.test(word));
     console.log(nextGuessArray);
 }
 
-function setNextGuess(){
+function setNextGuess() {
     let random = Math.floor((Math.random() * nextGuessArray.length));
     currentWord = nextGuessArray[random];
     guessArray.push(currentWord);
 }
 
-function populateCurrentGuess(){
+function populateCurrentGuess() {
     wordArray = currentWord.split("");
     for (let i = 0; i < boxArray.length; i++) {
         boxArray[i].innerHTML = wordArray[i];
@@ -159,9 +155,9 @@ function greenClick() {
     for (let i = 0; i < boxArray.length; i++) {
         if (boxArray[i].classList.contains('greenClick') && i === 0) {
             firstLetter = boxArray[i].innerText;
-            if(!greenGuessArray.includes(boxArray[i].innerText)){
+            if (!greenGuessArray.includes(boxArray[i].innerText)) {
                 greenGuessArray.push(boxArray[i].innerText);
-                if(yellowGuessArray.includes(boxArray[i].innerText)){
+                if (yellowGuessArray.includes(boxArray[i].innerText)) {
                     let index = yellowGuessArray.indexOf(boxArray[i].innerText);
                     yellowGuessArray.splice(index, 1);
                 }
@@ -169,9 +165,9 @@ function greenClick() {
         }
         else if (boxArray[i].classList.contains('greenClick') && i === 1) {
             secondLetter = boxArray[i].innerText;
-            if(!greenGuessArray.includes(boxArray[i].innerText)){
+            if (!greenGuessArray.includes(boxArray[i].innerText)) {
                 greenGuessArray.push(boxArray[i].innerText);
-                if(yellowGuessArray.includes(boxArray[i].innerText)){
+                if (yellowGuessArray.includes(boxArray[i].innerText)) {
                     let index = yellowGuessArray.indexOf(boxArray[i].innerText);
                     yellowGuessArray.splice(index, 1);
                 }
@@ -179,9 +175,9 @@ function greenClick() {
         }
         else if (boxArray[i].classList.contains('greenClick') && i === 2) {
             thirdLetter = boxArray[i].innerText;
-            if(!greenGuessArray.includes(boxArray[i].innerText)){
+            if (!greenGuessArray.includes(boxArray[i].innerText)) {
                 greenGuessArray.push(boxArray[i].innerText);
-                if(yellowGuessArray.includes(boxArray[i].innerText)){
+                if (yellowGuessArray.includes(boxArray[i].innerText)) {
                     let index = yellowGuessArray.indexOf(boxArray[i].innerText);
                     yellowGuessArray.splice(index, 1);
                 }
@@ -189,9 +185,9 @@ function greenClick() {
         }
         else if (boxArray[i].classList.contains('greenClick') && i === 3) {
             fourthLetter = boxArray[i].innerText;
-            if(!greenGuessArray.includes(boxArray[i].innerText)){
+            if (!greenGuessArray.includes(boxArray[i].innerText)) {
                 greenGuessArray.push(boxArray[i].innerText);
-                if(yellowGuessArray.includes(boxArray[i].innerText)){
+                if (yellowGuessArray.includes(boxArray[i].innerText)) {
                     let index = yellowGuessArray.indexOf(boxArray[i].innerText);
                     yellowGuessArray.splice(index, 1);
                 }
@@ -199,9 +195,9 @@ function greenClick() {
         }
         else if (boxArray[i].classList.contains('greenClick') && i === 4) {
             fifthLetter = boxArray[i].innerText;
-            if(!greenGuessArray.includes(boxArray[i].innerText)){
+            if (!greenGuessArray.includes(boxArray[i].innerText)) {
                 greenGuessArray.push(boxArray[i].innerText);
-                if(yellowGuessArray.includes(boxArray[i].innerText)){
+                if (yellowGuessArray.includes(boxArray[i].innerText)) {
                     let index = yellowGuessArray.indexOf(boxArray[i].innerText);
                     yellowGuessArray.splice(index, 1);
                 }
@@ -211,11 +207,14 @@ function greenClick() {
     console.log("greenGuesses: " + greenGuessArray);
 }
 
-
-
-
-
-
+function clearGreen() {
+    for (let i = 0; i < boxArray.length; i++) {
+        if (boxArray[i].classList.contains('greenClick')) {
+            boxArray[i].classList.remove('greenClick');
+            boxArray[i].classList.add('bisque');
+        }
+    }
+}
 
 function yellowClick() {
 
@@ -251,9 +250,9 @@ function yellowClick() {
             }
         }
     }
-    else{
-        for(let i =0; i < boxArray.length; i++){
-            if(!boxArray[i].classList.contains('greenClick')){
+    else {
+        for (let i = 0; i < boxArray.length; i++) {
+            if (!boxArray[i].classList.contains('greenClick')) {
                 if (i === 0) {
                     firstLetter = yellowGuessString;
                 }
@@ -271,20 +270,15 @@ function yellowClick() {
                 }
             }
         }
-        
+
     }
     totalGuesses = greenGuessArray.length + yellowGuessArray.length;
     yellowGuessString = yellowGuessArray.join('');
-    
+
     console.log("totalguesses: " + totalGuesses);
     console.log("yellowguessstring: " + yellowGuessString);
     resetYellow();
 }
-
-
-
-
-
 
 function bisqueClick() {
     let bisqueArray = [];
@@ -342,6 +336,21 @@ function makeGuessList() {
     li.appendChild(document.createTextNode(currentWord));
     ul.appendChild(li);
     console.log("current word is: " + currentWord);
+}
+
+function checkWin() {
+    let greenGuesses = 0
+    for (let i = 0; i < boxArray.length; i++) {
+        if (boxArray[i].classList.contains('greenClick')) {
+            greenGuesses++;
+        }
+    }
+    if (greenGuesses === 5) {
+        return true;
+    } else {
+        return false;
+    }
+
 }
 
 /* ---------------EVENT HANDLERS----------------------- */
